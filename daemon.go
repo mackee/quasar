@@ -29,14 +29,18 @@ func (dt daemonType) ToInstance(d daemon) (instance, error) {
 	switch dt {
 	case RawCommandDaemon:
 		return newRawCommandInstance(d), nil
+	case MySQLDaemon:
+		return newMySQLInstance(d), nil
 	default:
 		return nil, unknownDaemonTypeError
 	}
 }
 
 type daemon struct {
-	Name    string      `yaml:"name"`
-	Type    string      `yaml:"type"`
+	Name string `yaml:"name"`
+	Type string `yaml:"type"`
+
+	// for RawCommand
 	Command commandOpts `yaml:"command"`
 }
 
@@ -46,6 +50,15 @@ func (d daemon) ToInstance() (instance, error) {
 		return nil, unknownDaemonTypeError
 	}
 	return dt.ToInstance(d)
+}
+
+func (d daemon) logName() string {
+	logName := d.Type
+	if d.Name != "" {
+		logName = d.Name
+	}
+
+	return logName
 }
 
 type instanceStatus int
@@ -61,7 +74,6 @@ const (
 type instance interface {
 	Run(ctx context.Context) error
 	Stop() error
-	PID() (int, error)
 	Status() instanceStatus
 	Wait() error
 }

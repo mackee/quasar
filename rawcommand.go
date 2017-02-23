@@ -2,7 +2,6 @@ package quasar
 
 import (
 	"context"
-	"os"
 	"os/exec"
 	"syscall"
 
@@ -22,10 +21,21 @@ func newRawCommandInstance(d daemon) *rawCommandInstance {
 
 func (ins *rawCommandInstance) Run(ctx context.Context) error {
 	cmd := exec.CommandContext(ctx, "sh", "-c", ins.daemon.Command.Launch)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
 
-	err := cmd.Start()
+	logName := ins.daemon.logName()
+	or, err := cmd.StdoutPipe()
+	if err != nil {
+		return errors.Wrap(err, "cannot read cmd stdout")
+	}
+	go logging(or, logName)
+
+	er, err := cmd.StderrPipe()
+	if err != nil {
+		return errors.Wrap(err, "cannot read cmd stdout")
+	}
+	go logging(er, logName+".stderr")
+
+	err = cmd.Start()
 	if err != nil {
 		return errors.Wrap(err, "fail start instance")
 	}
@@ -47,16 +57,6 @@ func (ins *rawCommandInstance) Stop() error {
 	}
 
 	return nil
-}
-
-func (ins *rawCommandInstance) PID() (int, error) {
-	if ins.cmd == nil {
-		return 0, errors.New("not start instance")
-	}
-	if ins.cmd.ProcessState.Exited() {
-		return 0, errors.New("process is exited")
-	}
-	return ins.cmd.Process.Pid, nil
 }
 
 func (ins *rawCommandInstance) Status() instanceStatus {

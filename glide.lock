@@ -1,8 +1,20 @@
-hash: 10f98b87f42a2cc887904cb9056325998160bbf261fa6eaa2c0d91343baf0ade
-updated: 2017-01-21T14:38:06.948214967+09:00
+hash: 6cdfa24a3ed0dac4139cd30612a8d26fa2b8c9d5b1c97a20ac23d2062b9ea1e2
+updated: 2017-02-23T17:21:42.406607041+09:00
 imports:
+- name: github.com/go-sql-driver/mysql
+  version: a732e14c62dde3285440047bba97581bc472ae18
+- name: github.com/lestrrat/go-tcputil
+  version: 3cae7c8432aeb817399f001e0db3f5bb04e8b8a6
+- name: github.com/lestrrat/go-test-mysqld
+  version: efcad5e3def274f89483d96eec81e48f683ecd6e
+- name: github.com/mattn/go-colorable
+  version: d228849504861217f796da67fae4f6e347643f15
 - name: github.com/pkg/errors
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: golang.org/x/sync
+  version: 86ddc858aa39d0f6cccccd733e482ddc52b852e9
+  subpackages:
+  - errgroup
 - name: gopkg.in/yaml.v2
-  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
+  version: a3f3340b5840cee44f372bddb5880fcbc419b46a
 testImports: []
