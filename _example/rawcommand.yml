@@ -1,0 +1,5 @@
+---
+daemons:
+    - type: RawCommand
+      command:
+          launch: "seq 10 | gxargs -I{} sh -c 'echo {}; sleep 1'"

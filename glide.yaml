@@ -1,0 +1,5 @@
+package: github.com/mackee/quasar
+import:
+- package: gopkg.in/yaml.v2
+- package: github.com/pkg/errors
+  version: ~0.8.0
