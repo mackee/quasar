@@ -74,6 +74,14 @@ func (ins *rawCommandInstance) Wait() error {
 	return ins.cmd.Wait()
 }
 
+func (ins *rawCommandInstance) GetEnv(envname string) (string, error) {
+	return "", errors.New("not implemented yet in raw command")
+}
+
+func (ins *rawCommandInstance) Close(closername string) error {
+	return errors.New("not implemented yet in raw command")
+}
+
 type commandOpts struct {
 	Launch string `yaml:"launch"`
 }

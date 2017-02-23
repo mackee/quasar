@@ -76,4 +76,6 @@ type instance interface {
 	Stop() error
 	Status() instanceStatus
 	Wait() error
+	GetEnv(string) (string, error)
+	Close(string) error
 }
