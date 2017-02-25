@@ -97,7 +97,7 @@ func (ins *mysqlInstance) createDatabase() (string, error) {
 		return "", errors.Wrap(err, "cannot create database in createDatabase")
 	}
 
-	fmt.Fprintf(ins.logger, "create database %s", dbname)
+	fmt.Fprintf(ins.logger, "create database %s\n", dbname)
 
 	dsn := md.DSN(mysqltest.WithDbname(dbname))
 	return dsn, nil
