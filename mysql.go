@@ -1,6 +1,7 @@
 package quasar
 
 import (
+	"bytes"
 	"context"
 	"database/sql"
 	"fmt"
@@ -18,6 +19,7 @@ type mysqlInstance struct {
 	status    instanceStatus
 	waitCh    chan struct{}
 	dbnameCnt uint64
+	logger    *bytes.Buffer
 }
 
 func newMySQLInstance(d daemon) *mysqlInstance {
@@ -26,6 +28,7 @@ func newMySQLInstance(d daemon) *mysqlInstance {
 		status:    instanceStatusStopped,
 		waitCh:    make(chan struct{}),
 		dbnameCnt: 0,
+		logger:    new(bytes.Buffer),
 	}
 }
 
@@ -46,6 +49,7 @@ func (ins *mysqlInstance) Run(ctx context.Context) error {
 	}
 	logName := ins.daemon.logName()
 	go logging(lr, logName)
+	go logging(ins.logger, logName)
 
 	ins.status = instanceStatusRunning
 
@@ -72,6 +76,7 @@ func (ins *mysqlInstance) Wait() error {
 func (ins *mysqlInstance) GetEnv(envname string) (string, error) {
 	switch envname {
 	case "dsn", "DSN":
+		fmt.Fprintln(ins.logger, "received dsn request")
 		return ins.createDatabase()
 	default:
 		return "", errors.New("undefined enviroment in MySQLDaemon")
@@ -91,6 +96,8 @@ func (ins *mysqlInstance) createDatabase() (string, error) {
 	if err != nil {
 		return "", errors.Wrap(err, "cannot create database in createDatabase")
 	}
+
+	fmt.Fprintf(ins.logger, "create database %s", dbname)
 
 	dsn := md.DSN(mysqltest.WithDbname(dbname))
 	return dsn, nil
