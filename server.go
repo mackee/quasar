@@ -1,7 +1,6 @@
 package quasar
 
 import (
-	"fmt"
 	"net"
 	"net/http"
 	"net/rpc"
@@ -22,7 +21,6 @@ type RPCArgs struct {
 }
 
 func (s *Server) GetEnv(args *RPCArgs, resp *string) error {
-	fmt.Println("hogehogehogehoge")
 	ins, ok := s.instances[args.Name]
 	if !ok {
 		return DaemonNameIsNotFoundError
